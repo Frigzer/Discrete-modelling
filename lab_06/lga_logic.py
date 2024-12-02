@@ -1,10 +1,7 @@
 import numpy as np
-import multiprocessing as mp
-
 
 from cell import Cell
 from wall import Wall
-
 
 
 # Klasa LGA
@@ -13,7 +10,8 @@ class LGA:
         self.height = height
         self.width = width
         self.grid = [[Cell() for _ in range(width)] for _ in range(height)]
-        hole_positions = [height // 2 - 3, height // 2 - 2, height // 2 - 1, height // 2, height // 2 + 1, height // 2 + 2, height // 2 + 3]
+        hole_positions = [height // 2 - 3, height // 2 - 2, height // 2 - 1, height // 2, height // 2 + 1,
+                          height // 2 + 2, height // 2 + 3]
         self.wall = Wall(self.grid, hole_positions).create_wall_with_hole()
 
         # Inicjalizacja gazu po lewej stronie ściany
@@ -59,16 +57,12 @@ class LGA:
 
         return new_grid
 
-
     def step(self):
         for row in self.grid:
             for cell in row:
                 cell.collide()
 
-
         self.grid = self.streaming()
-
-
 
     def get_state(self):
         state = np.array([[sum(cell.input) for cell in row] for row in self.grid])

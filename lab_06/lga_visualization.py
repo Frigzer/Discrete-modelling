@@ -26,7 +26,7 @@ class LGAVisualizer:
         boundary_y = GRID_HEIGHT * CELL_SIZE
 
         # Rysowanie linii na granicy między gridem a menu
-        pygame.draw.line(self.screen, RED, (0, boundary_y), (WINDOW_WIDTH, boundary_y), 5)
+        pygame.draw.line(self.screen, LIGHT_BLUE, (0, boundary_y), (WINDOW_WIDTH, boundary_y), 2)
 
     def draw_grid(self, state):
         for i in range(GRID_HEIGHT):
@@ -38,7 +38,7 @@ class LGAVisualizer:
                     color = RED
                     border_color = RED
                 pygame.draw.rect(self.screen, color, (j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-                #pygame.draw.rect(self.screen, border_color, (j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
+                pygame.draw.rect(self.screen, border_color, (j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
 
     def update(self):
         self.screen.fill(WHITE)  # Czyszczenie ekranu
