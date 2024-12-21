@@ -8,7 +8,7 @@ def collide_optimized(f_in, f_eq, tau):
     return f_in + (f_eq - f_in) / tau
 
 @njit
-def stream_optimized(f_out, wall_mask, height, width):
+def stream_optimized(f_out, wall_mask, height, width, velocities, opposite):
     f_temp = np.zeros_like(f_out)
 
     for i in range(height):
@@ -16,6 +16,15 @@ def stream_optimized(f_out, wall_mask, height, width):
             if wall_mask[i, j]:
                 continue
 
+            for k in range(4):
+                ni = i - velocities[k][0]
+                nj = j - velocities[k][1]
+                if 0 <= ni < height and 0 <= nj < width and not wall_mask[ni, nj]:
+                    f_temp[ni, nj, k] = f_out[i, j, k]
+                else:
+                    f_temp[i, j, opposite[k]] = f_out[i, j, k]
+
+            '''
             # Góra
             if i > 0 and not wall_mask[i - 1, j]:
                 f_temp[i - 1, j, 0] = f_out[i, j, 0]
@@ -39,6 +48,7 @@ def stream_optimized(f_out, wall_mask, height, width):
                 f_temp[i, j + 1, 1] = f_out[i, j, 1]
             else:
                 f_temp[i, j, 3] = f_out[i, j, 1]
+                '''
 
     return f_temp
 
@@ -82,7 +92,7 @@ class LBM:
 
     def stream(self):
         wall_mask = self.wall.get_mask() # Generowanie maski ścian
-        self.f_in = stream_optimized(self.f_out, wall_mask, self.height, self.width)
+        self.f_in = stream_optimized(self.f_out, wall_mask, self.height, self.width, VELOCITIES, OPPOSITE_DIRECTIONS)
 
     def apply_concentration(self):
         # Aktualizacja stężenia na podstawie sumy funkcji rozkładu
