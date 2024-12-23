@@ -1,6 +1,8 @@
 # main.py
 
 import pygame
+from Tools.demo.sortvisu import steps
+
 from constants import *
 from lbm_visualization import LBMVisualizer
 from lbm_logic import LBM
@@ -22,9 +24,11 @@ def main():
     visualizer_ux = LBMVisualizer(lbm, screen, "Velocity X", x_offset=WINDOW_WIDTH)
     visualizer_uy = LBMVisualizer(lbm, screen, "Velocity Y", x_offset=2 * WINDOW_WIDTH)
 
+
     speed = 1
     running = True
     animating = False
+    iteration = 0
 
     while running:
         for event in pygame.event.get():
@@ -43,6 +47,8 @@ def main():
                     visualizer_ux = LBMVisualizer(lbm, screen, "Velocity X", x_offset=WINDOW_WIDTH)
                     visualizer_uy = LBMVisualizer(lbm, screen, "Velocity Y", x_offset=2 * WINDOW_WIDTH)
 
+                    iteration = 0
+
                     animating = False
 
                 elif visualizer_density.faster_button.collidepoint(event.pos):
@@ -53,12 +59,13 @@ def main():
         if animating:
             for _ in range(speed):
                 lbm.step()  # Obliczenia są wykonywane tylko raz
+                iteration += speed
 
         # Rysowanie trzech wizualizacji obok siebie
         screen.fill(WHITE)
-        visualizer_density.update(speed, "density")
-        visualizer_ux.update(speed, "ux")
-        visualizer_uy.update(speed, "uy")
+        visualizer_density.update(speed, iteration, "density")
+        visualizer_ux.update(speed, iteration, "ux")
+        visualizer_uy.update(speed, iteration, "uy")
         pygame.display.flip()
 
         clock.tick(60)

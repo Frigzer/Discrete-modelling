@@ -37,47 +37,71 @@ class LBMVisualizer:
         # Umieszczenie tekstu na ekranie (np. w prawym górnym rogu)
         self.screen.blit(text_surface, (570, GRID_HEIGHT * CELL_SIZE + 35))
 
+    def draw_iteration(self, iteration):
+        font = pygame.font.Font(None, 36)
+        # Tworzenie tekstu z aktualną prędkością
+        text_surface = font.render(f"Iteration: {iteration}", True, (0, 0, 0))
+        # Umieszczenie tekstu na ekranie (np. w prawym górnym rogu)
+        self.screen.blit(text_surface, (800, GRID_HEIGHT * CELL_SIZE + 35))
+
     def draw_grid_and_menu_boundary(self):
         # Ustal miejsce, gdzie ma być granica (pozycja y)
+        boundary_x = GRID_WIDTH * CELL_SIZE
         boundary_y = GRID_HEIGHT * CELL_SIZE
 
         # Rysowanie linii na granicy między gridem a menu
-        pygame.draw.line(self.screen, LIGHT_BLUE, (self.x_offset, boundary_y), (self.x_offset + WINDOW_WIDTH, boundary_y), 2)
+        pygame.draw.line(self.screen, GREEN, (self.x_offset, 0),
+                         (self.x_offset + WINDOW_WIDTH, 0), 2)
+        pygame.draw.line(self.screen, GREEN, (self.x_offset, boundary_y), (self.x_offset + WINDOW_WIDTH, boundary_y), 2)
 
+        pygame.draw.line(self.screen, GREEN, (self.x_offset, 0),
+                         (self.x_offset, boundary_y), 2)
+        pygame.draw.line(self.screen, GREEN, (self.x_offset + boundary_x, 0),
+                         (self.x_offset + boundary_x, boundary_y), 2)
 
     def draw_grid(self, mode="density"):
+        center_x = self.lbm.width // 2
+        center_y = self.lbm.height // 2
+
         if mode == "density":
             data = np.nan_to_num(self.lbm.rho, nan=0.0, posinf=0.0, neginf=0.0)
+            rho = self.lbm.get_rho()
             title = "Density"
         elif mode == "ux":
             data = np.nan_to_num(self.lbm.ux, nan=0.0, posinf=0.0, neginf=0.0)
+            ux = self.lbm.get_velocity_x()
             title = "Velocity X"
         elif mode == "uy":
             data = np.nan_to_num(self.lbm.uy, nan=0.0, posinf=0.0, neginf=0.0)
+            uy = self.lbm.get_velocity_y()
             title = "Velocity Y"
 
         for i in range(self.lbm.height):
             for j in range(self.lbm.width):
+                x = j - center_x
+                y = center_y - i  # Ujemne y dla zgodności z układem współrzędnych
                 if self.lbm.wall.is_wall(i, j):  # Ściana
                     color = GREEN
                 else:
                     value = data[i, j]
                     if mode == "density":
-                        intensity = int(255 * (1 - (value - 0.0) / (1.0 - 0.0)))
+                        intensity = int(255 * (1 - (rho[i, j] - 0.0) / (1.0 - 0.0)))
                         #intensity = max(0, min(255, int(255 * (1 - value / CELL_DENSITY))))
                         intensity = max(0, min(255, intensity))
                         color = (intensity, intensity, intensity)
                     elif mode == "ux":
-                        # Wizualizacja prędkości poziomej (u_x) - czerwona dla dodatnich, niebieska dla ujemnych
-                        intensity = max(0, min(255, int(255 * abs(value))))
+                        max_speed = 0.5  # Stała maksymalna wartość prędkości poziomej
+                        intensity = int(255 * min(abs(ux[i, j]), max_speed) / max_speed)
+                        intensity = max(0, min(255, intensity))
                         if value > 0:
                             color = (255, 255 - intensity, 255 - intensity)  # Czerwona gradacja dla dodatnich
                         else:
                             color = (255 - intensity, 255 - intensity, 255)  # Niebieska gradacja dla ujemnych
                     elif mode == "uy":
-                        # Wizualizacja prędkości pionowej (u_y) - czerwona dla dodatnich, niebieska dla ujemnych
-                        intensity = max(0, min(255, int(255 * abs(value))))
-                        if value > 0:
+                        max_speed = 0.5  # Stała maksymalna wartość prędkości pionowej
+                        intensity = int(255 * min(abs(uy[i, j]), max_speed) / max_speed)
+                        intensity = max(0, min(255, intensity))
+                        if value < 0:
                             color = (255, 255 - intensity, 255 - intensity)  # Czerwona gradacja dla dodatnich
                         else:
                             color = (255 - intensity, 255 - intensity, 255)  # Niebieska gradacja dla ujemnych
@@ -86,10 +110,12 @@ class LBMVisualizer:
                     self.screen, color,
                     (self.x_offset + j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE)
                 )
+                #pygame.draw.rect(self.screen, WHITE, (self.x_offset + j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
+
         self.draw_grid_and_menu_boundary()
 
 
-    def update(self, speed, mode):
+    def update(self, speed, iteration, mode):
         self.draw_grid(mode)
 
         # Rysowanie przycisków
@@ -100,4 +126,5 @@ class LBMVisualizer:
         self.draw_button(self.faster_button, "+", BLUE, LIGHT_BLUE)
         self.draw_button(self.slower_button, "-", BLUE, LIGHT_BLUE)
         self.draw_speed(speed)  # Wyświetl prędkość
+        self.draw_iteration(iteration)  # Wyświetl prędkość
        # pygame.display.flip()
