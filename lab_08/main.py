@@ -12,7 +12,7 @@ def main():
     # Uruchomienie wizualizacji
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH * 3, WINDOW_HEIGHT))  # Szerokie okno
-    pygame.display.set_caption("LBM Visualization - Density | Velocity X | Velocity Y")
+    pygame.display.set_caption("LBM Fluid flow - Adam Borek")
 
     clock = pygame.time.Clock()
 
@@ -59,13 +59,13 @@ def main():
         if animating:
             for _ in range(speed):
                 lbm.step()  # Obliczenia są wykonywane tylko raz
-                iteration += speed
+                iteration += 1
 
         # Rysowanie trzech wizualizacji obok siebie
         screen.fill(WHITE)
         visualizer_density.update(speed, iteration, "density")
-        visualizer_ux.update(speed, iteration, "ux")
-        visualizer_uy.update(speed, iteration, "uy")
+        visualizer_ux.update(speed, iteration, "uy")
+        visualizer_uy.update(speed, iteration, "ux")
         pygame.display.flip()
 
         clock.tick(60)

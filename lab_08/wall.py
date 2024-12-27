@@ -14,11 +14,11 @@ class Wall:
         quarter_x = self.wall.shape[1] // WALL_POSITION
 
         # Tworzenie pionowej ściany
-        self.wall[:, quarter_x] = 0
+        self.wall[:, quarter_x] = -1
 
         # Tworzenie dziury w ścianie
         for hole in range(self.hole_start, self.hole_end + 1):
-            self.wall[hole, quarter_x] = -1
+            self.wall[hole, quarter_x] = 0
 
 
     def is_wall(self, i, j):

@@ -10,12 +10,12 @@ class LBMVisualizer:
         self.x_offset = x_offset
 
         # Przyciski
-        self.start_button = pygame.Rect(50, GRID_HEIGHT * CELL_SIZE + 20, 100, 50)
-        self.stop_button = pygame.Rect(200, GRID_HEIGHT * CELL_SIZE + 20, 100, 50)
-        self.reset_button = pygame.Rect(350, GRID_HEIGHT * CELL_SIZE + 20, 100, 50)
+        self.start_button = pygame.Rect(170, GRID_HEIGHT * CELL_SIZE + 20, 100, 50)
+        self.stop_button = pygame.Rect(320, GRID_HEIGHT * CELL_SIZE + 20, 100, 50)
+        self.reset_button = pygame.Rect(470, GRID_HEIGHT * CELL_SIZE + 20, 100, 50)
 
-        self.faster_button = pygame.Rect(500, GRID_HEIGHT * CELL_SIZE + 20, 50, 50)
-        self.slower_button = pygame.Rect(700, GRID_HEIGHT * CELL_SIZE + 20, 50, 50)
+        self.faster_button = pygame.Rect(620, GRID_HEIGHT * CELL_SIZE + 20, 50, 50)
+        self.slower_button = pygame.Rect(820, GRID_HEIGHT * CELL_SIZE + 20, 50, 50)
 
     def draw_button(self, rect, text, default_color, hover_color):
         if rect.collidepoint(pygame.mouse.get_pos()):
@@ -35,14 +35,14 @@ class LBMVisualizer:
         # Tworzenie tekstu z aktualną prędkością
         text_surface = font.render(f"Speed: {speed}", True, (0, 0, 0))
         # Umieszczenie tekstu na ekranie (np. w prawym górnym rogu)
-        self.screen.blit(text_surface, (570, GRID_HEIGHT * CELL_SIZE + 35))
+        self.screen.blit(text_surface, (690, GRID_HEIGHT * CELL_SIZE + 35))
 
     def draw_iteration(self, iteration):
         font = pygame.font.Font(None, 36)
         # Tworzenie tekstu z aktualną prędkością
         text_surface = font.render(f"Iteration: {iteration}", True, (0, 0, 0))
         # Umieszczenie tekstu na ekranie (np. w prawym górnym rogu)
-        self.screen.blit(text_surface, (800, GRID_HEIGHT * CELL_SIZE + 35))
+        self.screen.blit(text_surface, (920, GRID_HEIGHT * CELL_SIZE + 35))
 
     def draw_grid_and_menu_boundary(self):
         # Ustal miejsce, gdzie ma być granica (pozycja y)
@@ -85,12 +85,12 @@ class LBMVisualizer:
                 else:
                     value = data[i, j]
                     if mode == "density":
-                        intensity = int(255 * (1 - (rho[i, j] - 0.0) / (1.0 - 0.0)))
+                        intensity = int(255 * (1 - (rho[i, j] - 0.5) / (CELL_DENSITY - 0.5)))
                         #intensity = max(0, min(255, int(255 * (1 - value / CELL_DENSITY))))
                         intensity = max(0, min(255, intensity))
                         color = (intensity, intensity, intensity)
                     elif mode == "ux":
-                        max_speed = 0.5  # Stała maksymalna wartość prędkości poziomej
+                        max_speed = 0.7  # Stała maksymalna wartość prędkości poziomej
                         intensity = int(255 * min(abs(ux[i, j]), max_speed) / max_speed)
                         intensity = max(0, min(255, intensity))
                         if value > 0:
@@ -98,7 +98,7 @@ class LBMVisualizer:
                         else:
                             color = (255 - intensity, 255 - intensity, 255)  # Niebieska gradacja dla ujemnych
                     elif mode == "uy":
-                        max_speed = 0.5  # Stała maksymalna wartość prędkości pionowej
+                        max_speed = 0.7  # Stała maksymalna wartość prędkości pionowej
                         intensity = int(255 * min(abs(uy[i, j]), max_speed) / max_speed)
                         intensity = max(0, min(255, intensity))
                         if value < 0:

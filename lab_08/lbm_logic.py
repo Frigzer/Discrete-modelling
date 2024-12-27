@@ -41,7 +41,7 @@ class LBM:
 
         # Gęstość i składowe prędkości
         self.rho = np.zeros((height, width), dtype=np.float64)
-        #self.rho[:, :] = 1e-6
+        self.rho[:, :] = 0.5#1e-6
         self.ux = np.zeros((height, width), dtype=np.float64)
         self.uy = np.zeros((height, width), dtype=np.float64)
 
@@ -88,15 +88,16 @@ class LBM:
         if np.any(self.f_eq < 0):
             print("f_eq < 0 in collision!!!")
 
-        self.f_out = self.f_in + (self.f_eq - self.f_in) / self.tau
+        #self.f_out = self.f_in + (self.f_eq - self.f_in) / self.tau
+        self.f_out = collide_optimized(self.f_in, self.f_eq, self.tau)
         if np.any(self.f_out < 0):
             print("f_out < 0 in collision!!!")
-        #self.f_out = collide_optimized(self.f_in, self.f_eq, self.tau)
 
     def stream(self):
+
         wall_mask = self.wall.get_mask() # Generowanie maski ścian
         f_temp = np.zeros_like(self.f_out)
-
+        '''
         for i in range(self.height):
             for j in range(self.width):
                 if wall_mask[i, j]:
@@ -110,22 +111,8 @@ class LBM:
                     else:
                         f_temp[i, j, OPPOSITE_DIRECTIONS[k]] = self.f_out[i, j, k]
         self.f_in = f_temp
-        # Aktualizacja prędkości w komórkach przy ścianach
-       # for i in range(self.height):
-      #      for j in range(self.width):
-        #        if wall_mask[i, j]:
-         #           # Zerowanie prędkości przy ścianach (no-slip condition)
-         #           self.ux[i, j] = 0
-         #           self.uy[i, j] = 0
-        #self.f_in = stream_optimized(self.f_out, wall_mask, self.height, self.width, VELOCITIES, OPPOSITE_DIRECTIONS)
-
-    def apply_macroscopic_variables(self):
-        epsilon = 1e-10  # Mała wartość zapobiegająca dzieleniu przez zero
-        self.rho = np.sum(self.f_in, axis=2)  # Gęstość
-        rho_ux = np.sum(self.f_in * np.array([v[0] for v in VELOCITIES]), axis=2)
-        rho_uy = np.sum(self.f_in * np.array([v[1] for v in VELOCITIES]), axis=2)
-        self.ux = rho_ux / self.rho
-        self.uy = rho_uy / self.rho
+        '''
+        self.f_in = stream_optimized(self.f_out, wall_mask, self.height, self.width, VELOCITIES, OPPOSITE_DIRECTIONS)
 
     def compute_macroscopic(self):
         self.rho = np.sum(self.f_in, axis=2)
@@ -134,7 +121,7 @@ class LBM:
         self.uy[non_zero_mask] = np.sum(self.f_in * np.array([v[1] for v in VELOCITIES]), axis=2)[non_zero_mask] / self.rho[non_zero_mask]
 
         # Maksymalna dozwolona wartość prędkości
-        u_max = 0.5  # Możesz dostosować tę wartość
+        u_max = 0.7  # Możesz dostosować tę wartość
 
         # Ograniczenie prędkości do zakresu [-u_max, u_max]
         self.ux = np.clip(self.ux, -u_max, u_max)
@@ -144,7 +131,6 @@ class LBM:
         # Sprawdzenie zachowania masy (debug)
         total_mass_before = np.sum(self.rho)
 
-       # self.compute_macroscopic()
         self.collide()
         print(f"After collide - Min f_in: {np.min(self.f_in)}, Min f_eq: {np.min(self.f_eq)}")
         self.stream()

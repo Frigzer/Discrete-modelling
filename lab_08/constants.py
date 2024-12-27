@@ -15,8 +15,8 @@ WINDOW_HEIGHT = 400
 
 MENU_HEIGHT = 100
 
-CELL_SIZE = 7
-CELL_DENSITY = 1.0
+CELL_SIZE = 5
+CELL_DENSITY = 2.0
 
 WALL_POSITION = 4
 HOLE_SIZE = 7
@@ -25,7 +25,7 @@ GRID_WIDTH = WINDOW_WIDTH // CELL_SIZE
 GRID_HEIGHT = (WINDOW_HEIGHT - MENU_HEIGHT) // CELL_SIZE
 
 # Współczynniki wagowe dla D2Q9
-WEIGHTS = np.array([4/9, 1/9, 1/9, 1/9, 1/9, 1/36, 1/36, 1/36, 1/36], dtype=np.float64)
+WEIGHTS = np.array([4.0/9.0, 1.0/9.0, 1.0/9.0, 1.0/9.0, 1.0/9.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0], dtype=np.float64)
 
 # Wektory prędkości dla D2Q9
 VELOCITIES = np.array([
