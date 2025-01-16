@@ -11,7 +11,7 @@ def main():
     # Uruchomienie wizualizacji
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH * 3, WINDOW_HEIGHT))  # Szerokie okno
-    pygame.display.set_caption("LBM Additional functions - Adam Borek")
+    pygame.display.set_caption("LBM Final - Adam Borek")
 
     clock = pygame.time.Clock()
 
@@ -24,9 +24,6 @@ def main():
     visualizer_density = LBMVisualizer(lbm, screen, "Density", x_offset=0)
     visualizer_ux = LBMVisualizer(lbm, screen, "Velocity X", x_offset=WINDOW_WIDTH)
     visualizer_uy = LBMVisualizer(lbm, screen, "Velocity Y", x_offset=2 * WINDOW_WIDTH)
-
-    visualizer_ux.initialize_particles(num_particles=10)
-    visualizer_uy.initialize_particles(num_particles=10)
 
     speed = 1
     running = True
@@ -51,9 +48,6 @@ def main():
                     visualizer_ux = LBMVisualizer(lbm, screen, "Velocity X", x_offset=WINDOW_WIDTH)
                     visualizer_uy = LBMVisualizer(lbm, screen, "Velocity Y", x_offset=2 * WINDOW_WIDTH)
 
-                    visualizer_ux.initialize_particles(num_particles=10)
-                    visualizer_uy.initialize_particles(num_particles=10)
-
                     iteration = 0
 
                     boundary_condition="bounce-back"
@@ -65,9 +59,6 @@ def main():
                     visualizer_density = LBMVisualizer(lbm, screen, "Density", x_offset=0)
                     visualizer_ux = LBMVisualizer(lbm, screen, "Velocity X", x_offset=WINDOW_WIDTH)
                     visualizer_uy = LBMVisualizer(lbm, screen, "Velocity Y", x_offset=2 * WINDOW_WIDTH)
-
-                    visualizer_ux.initialize_particles(num_particles=10)
-                    visualizer_uy.initialize_particles(num_particles=10)
 
                     iteration = 0
 
@@ -81,9 +72,6 @@ def main():
                     visualizer_ux = LBMVisualizer(lbm, screen, "Velocity X", x_offset=WINDOW_WIDTH)
                     visualizer_uy = LBMVisualizer(lbm, screen, "Velocity Y", x_offset=2 * WINDOW_WIDTH)
 
-                    visualizer_ux.initialize_particles(num_particles=10)
-                    visualizer_uy.initialize_particles(num_particles=10)
-
                     iteration = 0
 
                     boundary_condition="custom"
@@ -94,14 +82,15 @@ def main():
                 elif visualizer_density.slower_button.collidepoint(event.pos):
                     speed = max(speed - 1, 1)
                 elif visualizer_density.save_button.collidepoint(event.pos):
-                    lbm.save_simulation_as_bmp("data/simulation", iteration)
+                    lbm.save_simulation_to_json("simulation", iteration)
+
                     visualizer_density.save_visualization_as_bmp("visualization")
                     visualizer_ux.save_visualization_as_bmp("visualization")
                     visualizer_uy.save_visualization_as_bmp("visualization")
-                    print("Symulacja zapisana do bitmapy.")
+
                 elif visualizer_density.load_button.collidepoint(event.pos):
-                    iteration = lbm.load_simulation_from_bmp("data/simulation")
-                    print("Symulacja wczytana z bitmapy.")
+                    iteration, boundary_condition = lbm.load_simulation_from_json("simulation")
+
         if animating:
             for _ in range(speed):
                 lbm.step(boundary_condition)  # Obliczenia są wykonywane tylko raz

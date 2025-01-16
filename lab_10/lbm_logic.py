@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 import pygame
 import random
@@ -45,6 +47,7 @@ class LBM:
         self.height = height
         self.width = width
         self.tau = tau
+        self.boundary_condition = boundary_condition
 
         # Trzy zestawy funkcji rozkładu (wejściowe, równowagowe, wyjściowe)
         self.f_in = np.zeros((height, width, 9), dtype=np.float64)
@@ -69,9 +72,8 @@ class LBM:
         self.total_mass = np.sum(self.rho)
 
     def initialize_particles(self, num_particles=5, y_min=2, y_max=None, particles_per_spot=2, mass_range=(1.0, 5.0)):
-        """Inicjalizuje cząstki w siatce."""
         if y_max is None:
-            y_max = self.height - 2  # Domyślnie omijamy 2 górne/dolne wiersze
+            y_max = self.height - 2
 
         self.particles = []
         for i in range(num_particles):
@@ -80,8 +82,7 @@ class LBM:
             for j in range(particles_per_spot):
                 self.particles.append(Particle(x, y, mass_range=mass_range))
 
-    def update_particles(self, velocity_scale=50.0):
-        """Aktualizuje pozycje cząstek na podstawie prędkości siatki."""
+    def update_particles(self, velocity_scale=100.0):
         for particle in self.particles:
             grid_x = int(particle.x)
             grid_y = int(particle.y)
@@ -93,7 +94,6 @@ class LBM:
                 particle.update_position(ux, uy, velocity_scale=velocity_scale)
 
     def draw_particles(self, screen, x_offset=0):
-        """Rysuje cząstki na ekranie."""
         for particle in self.particles:
             radius = max(3, int(3 * particle.mass))
             # Rysowanie pozycji cząstki
@@ -255,46 +255,53 @@ class LBM:
     def get_velocity_y(self):
         return self.uy
 
-    def save_simulation_as_bmp(self, base_filename="simulation", iteration=0):
-        """Zapisuje stan symulacji (gęstość, ux, uy) jako bitmapy oraz zapisuje particles i iterację."""
-        # Zapis gęstości
-        density_img = self._invert_visualize_density(self.get_rho())
-        density_img.save(f"{base_filename}_density.bmp")
+    def save_simulation_to_json(self, base_filename="simulation", iteration=0):
+        simulation_data = {
+            "iteration": iteration,
+            "rho": self.rho.tolist(),  # Gęstość
+            "ux": self.ux.tolist(),  # Prędkość x
+            "uy": self.uy.tolist(),  # Prędkość y
+            "f_in": self.f_in.tolist(),  # Funkcja dystrybucji f_in
+            "f_out": self.f_out.tolist(),  # Opcjonalne f_out
+            "boundary_condition": self.boundary_condition,  # Tryb warunków brzegowych
 
-        # Zapis prędkości
-        ux_img = self._visualize_velocity(self.get_velocity_x())
-        uy_img = self._visualize_velocity(self.get_velocity_y())
-        ux_img.save(f"{base_filename}_ux.bmp")
-        uy_img.save(f"{base_filename}_uy.bmp")
+            # Zapis cząstek
+            "particles": [
+                {
+                    "x": p.x, "y": p.y, "mass": p.mass, "color": p.color, "path": p.path
+                }
+                for p in self.particles
+            ],
 
-        # Zapis cząstek i iteracji
-        if hasattr(self, "particles") and self.particles:
-            particles_data = [{"x": p.x, "y": p.y, "mass": p.mass, "color": p.color, "path": p.path} for p in self.particles]
-            simulation_data = {
-                "iteration": iteration,
-                "particles": particles_data
-            }
-            with open(f"{base_filename}_particles.json", "w") as f:
-                import json
-                json.dump(simulation_data, f, indent=4)
-            print(f"Particles i iteracja zapisane do pliku {base_filename}_simulation.json")
+            # Zapis ściany (jeśli istnieje)
+            "wall": {
+                "wall_matrix": self.wall.wall.tolist() if self.wall else None,  # Macierz NumPy jako lista
+                "hole_start": self.wall.hole_start if self.wall else None,
+                "hole_end": self.wall.hole_end if self.wall else None
+            } if self.wall else None
+        }
 
-    def load_simulation_from_bmp(self, base_filename="simulation"):
-        """Wczytuje stan symulacji (gęstość, ux, uy) z bitmap oraz cząstki i iterację."""
-        # Wczytanie gęstości
-        density_img = Image.open(f"{base_filename}_density.bmp").convert('L')
-        self.rho = self._invert_denormalize_density(np.array(density_img))
+        with open(f"{base_filename}_state.json", "w") as f:
+            json.dump(simulation_data, f, indent=4)
 
-        # Wczytanie prędkości
-        ux_img = Image.open(f"{base_filename}_ux.bmp").convert('RGB')
-        uy_img = Image.open(f"{base_filename}_uy.bmp").convert('RGB')
-        self.ux = self._denormalize_velocity(np.array(ux_img))
-        self.uy = self._denormalize_velocity(np.array(uy_img))
+        print(f"Stan symulacji zapisany do {base_filename}_state.json")
 
-        # Wczytanie cząstek i iteracji
-        with open(f"{base_filename}_particles.json", "r") as f:
-            import json
+    def load_simulation_from_json(self, base_filename="simulation"):
+        with open(f"{base_filename}_state.json", "r") as f:
             simulation_data = json.load(f)
+
+        # Odczytanie podstawowych danych
+        self.rho = np.array(simulation_data["rho"])
+        self.ux = np.array(simulation_data["ux"])
+        self.uy = np.array(simulation_data["uy"])
+        self.f_in = np.array(simulation_data["f_in"])  # Pełne odtworzenie f_in
+        self.f_out = np.array(simulation_data["f_out"])  # Odtworzenie f_out
+
+        # Odczytanie trybu warunków brzegowych
+        self.boundary_condition = simulation_data.get("boundary_condition", "constant")
+        print(f"Tryb warunków brzegowych: {self.boundary_condition}")
+
+        # Odczytanie cząstek
         self.particles = [
             Particle(data["x"], data["y"], mass=data["mass"], color=tuple(data["color"]))
             for data in simulation_data["particles"]
@@ -302,72 +309,14 @@ class LBM:
         for p, data in zip(self.particles, simulation_data["particles"]):
             p.path = data["path"]  # Przywrócenie trajektorii
 
-        # Odczytanie iteracji
+        # Odczytanie ścian (jeśli były zapisane)
+        if "wall" in simulation_data and simulation_data["wall"]:
+            wall_data = simulation_data["wall"]
+            self.wall = Wall(self.height, self.width, wall_data["hole_start"], wall_data["hole_end"])
+            self.wall.wall = np.array(wall_data["wall_matrix"])  # Odtworzenie macierzy
+            print("Ściany zostały wczytane.")
+
         iteration = simulation_data.get("iteration", 0)
-        print(f"Particles i iteracja wczytane z pliku {base_filename}_particles.json, Iteracja: {iteration}")
+        print(f"Stan symulacji wczytany z {base_filename}_state.json, Iteracja: {iteration}")
 
-        # Aktualizacja funkcji równowagowych
-        for i in range(self.height):
-            for j in range(self.width):
-                self.f_in[i, j, :] = equilibrium(self.rho[i, j], self.ux[i, j], self.uy[i, j], VELOCITIES, WEIGHTS)
-
-        return iteration  # Zwracamy numer iteracji
-
-    def _invert_visualize_density(self, rho):
-        """Zapisuje gęstość do bitmapy z odwroconą skalą: czarny = 1, biały = 0."""
-        intensity = 255 * (1 - (rho / CELL_DENSITY))  # Czarny = maksymalna gęstość
-        intensity = np.clip(intensity, 0, 255).astype(np.uint8)
-        return Image.fromarray(intensity, mode="L")
-
-    def _invert_visualize_velocity(self, velocity):
-        """Generuje odwrócony obraz prędkości w skali czerwono-niebieskiej."""
-        max_speed = MAX_SPEED
-        intensity = 255 * np.minimum(np.abs(velocity), max_speed) / max_speed
-        intensity = np.clip(intensity, 0, 255).astype(np.uint8)
-
-        red_channel = np.where(velocity > 0, intensity, 0).astype(np.uint8)
-        blue_channel = np.where(velocity < 0, intensity, 0).astype(np.uint8)
-        green_channel = np.zeros_like(intensity, dtype=np.uint8)
-
-        # Zamiana kolorów: biały = 0 prędkości
-        red_channel = 255 - red_channel
-        blue_channel = 255 - blue_channel
-        return Image.merge("RGB", (
-            Image.fromarray(red_channel, mode="L"),
-            Image.fromarray(green_channel, mode="L"),
-            Image.fromarray(blue_channel, mode="L")
-        ))
-
-    def _invert_denormalize_density(self, density_image):
-        """Odczytuje gęstość z bitmapy i odwraca skalę: biały = 0, czarny = 1."""
-        return CELL_DENSITY * (1 - density_image / 255)
-
-    def _invert_denormalize_velocity(self, velocity_image):
-        """Odwrócona denormalizacja prędkości."""
-        red_channel = velocity_image[:, :, 0].astype(np.float64)
-        blue_channel = velocity_image[:, :, 2].astype(np.float64)
-        normalized = (255 - red_channel - (255 - blue_channel)) / 255  # Odwracanie
-        return normalized * MAX_SPEED
-
-    def _visualize_velocity(self, velocity):
-        """Generuje obraz prędkości w skali czerwono-niebieskiej."""
-        max_speed = MAX_SPEED
-        intensity = 255 * np.minimum(np.abs(velocity), max_speed) / max_speed
-        intensity = np.clip(intensity, 0, 255).astype(np.uint8)
-
-        red_channel = np.where(velocity > 0, intensity, 0).astype(np.uint8)
-        blue_channel = np.where(velocity < 0, intensity, 0).astype(np.uint8)
-        green_channel = np.zeros_like(intensity, dtype=np.uint8)
-
-        return Image.merge("RGB", (
-            Image.fromarray(red_channel, mode="L"),
-            Image.fromarray(green_channel, mode="L"),
-            Image.fromarray(blue_channel, mode="L")
-        ))
-
-    def _denormalize_velocity(self, velocity_image):
-        """Odczytuje prędkości z bitmapy w skali czerwono-niebieskiej."""
-        red_channel = velocity_image[:, :, 0].astype(np.float64)
-        blue_channel = velocity_image[:, :, 2].astype(np.float64)
-        normalized = (red_channel - blue_channel) / 255  # Skala od -1 do 1
-        return normalized * MAX_SPEED
+        return iteration, self.boundary_condition
