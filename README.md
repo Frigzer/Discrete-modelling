@@ -1,0 +1,122 @@
+# Discrete Modelling Projects
+
+This repository contains a collection of projects developed for the **Discrete Modelling** course. The main focus of the course was the use of **cellular automata** for simulating physical phenomena and basic image processing tasks.
+
+All code is written in **Python**, and each lab exercise is organized in its own folder (`lab_01` to `lab_10`).
+
+The course was divided into two main parts:
+- **Lab 01–Lab 05**: Focused on image processing using grayscale maps, including brightness manipulation and thresholding. These labs concluded with a forest fire simulation based on cellular automata.
+- **Lab 06–Lab 10**: Dedicated to simulations using the **Lattice Boltzmann Method (LBM)**, continuing with cellular automata as the core modeling technique.
+
+## 📁 Repository Structure
+
+📦Discrete-modelling/  
+ ┣ 📂assets/  
+ ┣ 📂lab_01/  
+ ┣ 📂lab_02/  
+ ┣ 📂lab_03/  
+ ┣ 📂lab_04/  
+ ┣ 📂lab_05/  
+ ┣ 📂lab_06/  
+ ┣ 📂lab_07/  
+ ┣ 📂lab_08/  
+ ┣ 📂lab_09/  
+ ┣ 📂lab_10/  
+ ┗ 📜README.md
+
+
+More detailed descriptions of each lab can be found in the sections below.
+
+## `lab_01` – Image Processing: Brightness Adjustment and Binarization
+
+This lab introduces basic image processing techniques using the Python Pillow library. The main focus is on manipulating image brightness and applying binary thresholding to grayscale images.
+
+**Features**:
+
+- **Image darkening** by a user-defined percentage (1–99%)
+- **Image brightening** in 3 steps using a percentage (10–20%)
+- **Binary thresholding** at fixed (50%) and custom threshold levels
+
+**Used libraries**:
+
+- `Pillow` (Python Imaging Library fork)
+
+**Example flow**:
+
+1. Loads a grayscale `.bmp` image (`Mapa_MD_no_terrain_low_res_Gray.bmp`)
+2. User inputs percentage values to:
+    - Darken the image
+    - Brighten the image in 3 increasing steps
+    - Apply binary thresholding
+
+3. Outputs:
+    - `darkened_image_by_X%.bmp`
+    - `brightened_image_step_1.bmp`, `step_2`, `step_3`
+    - `binary_image_50%.bmp`
+    - `binary_image_custom.bmp`
+
+**Code entry point**:
+
+```bash
+python main.py
+```
+
+💡 Tip: You can easily modify threshold levels or brightness ranges in main.py to experiment with different visual effects.
+
+### Lab 01 – Output Preview
+
+![Lab 01 demo](assets/lab_01_result.png)
+
+## `lab_02` – Morphological Operations and Convolution Filtering
+
+This lab extends image processing capabilities by applying **morphological transformations and convolution-based filtering**.
+
+**Features**:
+
+- **Binary thresholding** of input images
+- Morphological operations:
+
+    - **Dilation**
+    - **Erosion**
+    - **Opening**
+    - **Closing**
+
+- **Convolution filters** using custom kernel masks (e.g., Gaussian blur, edge detection)
+- Support for different **border handling** strategies:
+
+    - `constant`
+    - `replicate`
+    - `reflect`
+    - `wrap`
+
+**Used libraries**:
+
+- `Pillow`
+- `NumPy`
+
+**Example pipeline**:
+
+- Load image and kernel masks from file
+- Apply:
+
+    - Morphological transformations on binary mask
+    - Convolution filters on grayscale and color images
+
+- Save multiple result images for comparison
+
+**Input files**:
+
+- `cat.bmp`, `Mapa_MD_no_terrain_low_res_Gray.bmp` — images
+- `gauss.txt`, `simple_upper_pass.txt` — convolution masks
+
+**Output**:
+
+The script saves processed images like:
+
+- `zad_1_1.bmp`, `zad_1_2.bmp`, `zad_1_3.bmp` (morphological ops)
+- `zad_2_1_1.bmp`, ..., `zad_2_2_2.bmp` (convolutions)
+- `binary.bmp`
+
+### Lab 02 – Output Preview
+
+![Lab 02 demo](assets/lab_02_result.png)
