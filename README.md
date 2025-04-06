@@ -120,3 +120,40 @@ The script saves processed images like:
 ### Lab 02 – Output Preview
 
 ![Lab 02 demo](assets/lab_02_result.png)
+
+## `lab_03` – 1D Cellular Automaton with Rule-based Evolution
+
+In this lab, a one-dimensional binary cellular automaton is implemented using custom rule sets. The system evolves over time based on rules similar to those described by Stephen Wolfram.
+
+**Features**:
+
+- Binary states: each cell can be `0` or `1`
+- Supports both `absorbing` and `periodic` boundary conditions
+- Uses a list of rules (e.g. `[41, 69, 65, 190]`) to update the state in cycles
+- User-defined initial state:
+
+    - Manual input (e.g. `0, 1, 1, 0, 1`)
+    - Or `"random"` with specified length
+
+- Saves the automaton state evolution to `.csv`
+- Visualizes the evolution grid as a color-coded matrix
+
+**Key Functions**:
+
+- `automaton(...)`: core simulation logic
+- `handle_border(...)`: boundary behavior handler
+- `compute_new_state(...)`: applies rule to determine next cell value
+- `visualize_grid(...)`: uses `matplotlib` to draw a grid of the simulation
+
+**Output**:
+
+- `automaton_output.csv` – each row represents the state at a given time step
+- Plot showing cell states over time (orange = 1, white = 0)
+
+### Lab 03 – Input Preview
+
+![Lab 03 imput](assets/lab_03_example.png)
+
+### Lab 03 – Output Preview
+
+![Lab 03 demo](assets/lab_03_plot.png)
