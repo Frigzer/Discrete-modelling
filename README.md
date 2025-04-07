@@ -157,3 +157,41 @@ In this lab, a one-dimensional binary cellular automaton is implemented using cu
 ### Lab 03 – Output Preview
 
 ![Lab 03 demo](assets/lab_03_plot.png)
+
+## `lab_04` – Conway's Game of Life with Interactive GUI
+
+In this lab, the classic Conway’s Game of Life is implemented with a fully interactive Tkinter GUI and Matplotlib visualizations. The user can experiment with various initial patterns, boundary conditions, and animation settings.
+
+**Features**:
+
+- Real-time animation of the Game of Life in a Tkinter window
+- Multiple **preset patterns** like:
+
+    - `glider`, `oscillator`, `spaceship`, `acorn`, `snake_pit`, `glider_gun`, and more
+
+- Supports **periodic** and **reflective** boundary conditions
+- Zoom and pan functionality via mouse interaction
+- Adjustable speed via slider
+- GUI elements for:
+
+    - Pattern selection
+    - Start/pause/reset
+    - Iteration counter
+    - Boundary mode selection
+
+**Structure**:
+- `main.py` – entry point that launches the GUI
+- `game_of_life_logic.py` – logic for cell updates, neighborhood calculation, and pattern loading
+- `game_of_life_gui.py` – handles all GUI components and animation using Tkinter and Matplotlib
+
+**How to run**:
+
+```bash
+python main.py
+```
+
+### Lab 04 – Output Preview
+
+![Game of Life - spaceship](assets/lab_04_demo1.gif)
+
+![Game of Life - glider gun](assets/lab_04_demo2.gif)
