@@ -61,7 +61,7 @@ This lab introduces basic image processing techniques using the Python Pillow li
 python main.py
 ```
 
-💡 Tip: You can easily modify threshold levels or brightness ranges in main.py to experiment with different visual effects.
+>💡 Tip: You can easily modify threshold levels or brightness ranges in main.py to experiment with different visual effects.
 
 ### Lab 01 – Output Preview
 
@@ -195,3 +195,70 @@ python main.py
 ![Game of Life - spaceship](assets/lab_04_demo1.gif)
 
 ![Game of Life - glider gun](assets/lab_04_demo2.gif)
+
+## `lab_05` – Forest Fire Simulation with Wind, Humidity, and GUI Control
+
+This lab presents a fully interactive simulation of forest fire dynamics using cellular automata. The simulation is visualized in a GUI built with Tkinter and Matplotlib, where the user can control fire behavior, apply actions, and observe the effect of environmental conditions.
+
+🔥 **Features**:
+
+- Forest grid simulation with multiple terrain types:
+
+    - Soil, coniferous & deciduous trees, burning stages, water, saplings, craters
+
+- **Custom wind direction & strength** with effect on fire spread
+- **Humidity control**: affects fire probability
+- **Tree regeneration** based on cooldowns
+- Mouse interaction:
+
+    - Apply actions: fire, extinguish, plant tree, dig, incendiary bomb, etc.
+    - Click & drag editing
+
+- Map-based initialization from images (e.g. `map_1`, `map_2`)
+
+🎮 **User Interface**:
+
+- Start/pause/reset animation
+- Speed control
+- Preset terrain layouts
+- Boundary condition switch (periodic/reflective)
+- Visual zoom and pan (scroll or arrow keys)
+
+🌲 **Simulation states**:
+
+| Code      | Meaning            |
+| --------- | ------------------ |
+| 0         | Ground             |
+| 1         | Coniferous tree    |
+| 2         | Tree catching fire |
+| 3         | Fully burning tree |
+| 4         | Burned tree        |
+| 5         | Water              |
+| 6         | Regrowing tree     |
+| 7         | Deciduous tree     |
+| 8         | Crater (dug hole)  |
+
+🎬 **Example Preview**:
+
+![Forest Fire Simulation](assets/lab_05_demo.gif)
+
+> 🌪️ Wind affects the probability of ignition in directional cones. \
+> 🌧️ Humidity reduces ignition chance. \
+> 🧯 Regrowing trees and manual fire extinguishing possible.
+
+🗺️ **Example input maps**:
+
+- `map_1` to `map_4` (`.png`, `.jpg`) – color-coded terrains
+- `wietnam.png` – custom terrain with water channels
+
+🛠️ **Structure**:
+
+- `main.py` – launches the GUI
+- `fire_simulation_gui.py` – handles GUI logic and user interactions
+- `fire_simulation_logic.py` – contains fire spread mechanics and grid updates
+
+▶️ **Run with**:
+
+```bash
+python main.py
+```
