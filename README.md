@@ -200,7 +200,7 @@ python main.py
 
 This lab presents a fully interactive simulation of forest fire dynamics using cellular automata. The simulation is visualized in a GUI built with Tkinter and Matplotlib, where the user can control fire behavior, apply actions, and observe the effect of environmental conditions.
 
-🔥 **Features**:
+**Features**:
 
 - Forest grid simulation with multiple terrain types:
 
@@ -216,7 +216,7 @@ This lab presents a fully interactive simulation of forest fire dynamics using c
 
 - Map-based initialization from images (e.g. `map_1`, `map_2`)
 
-🎮 **User Interface**:
+**User Interface**:
 
 - Start/pause/reset animation
 - Speed control
@@ -224,7 +224,7 @@ This lab presents a fully interactive simulation of forest fire dynamics using c
 - Boundary condition switch (periodic/reflective)
 - Visual zoom and pan (scroll or arrow keys)
 
-🌲 **Simulation states**:
+**Simulation states**:
 
 | Code      | Meaning            |
 | --------- | ------------------ |
@@ -238,26 +238,26 @@ This lab presents a fully interactive simulation of forest fire dynamics using c
 | 7         | Deciduous tree     |
 | 8         | Crater (dug hole)  |
 
-🎬 **Example Preview**:
+### Lab 05 – Output Preview
 
 ![Forest Fire Simulation](assets/lab_05_demo.gif)
 
-> 🌪️ Wind affects the probability of ignition in directional cones. \
-> 🌧️ Humidity reduces ignition chance. \
-> 🧯 Regrowing trees and manual fire extinguishing possible.
+> - Wind affects the probability of ignition in directional cones.
+> - Humidity reduces ignition chance.
+> - Regrowing trees and manual fire extinguishing possible.
 
-🗺️ **Example input maps**:
+**Example input maps**:
 
 - `map_1` to `map_4` (`.png`, `.jpg`) – color-coded terrains
 - `wietnam.png` – custom terrain with water channels
 
-🛠️ **Structure**:
+**Structure**:
 
 - `main.py` – launches the GUI
 - `fire_simulation_gui.py` – handles GUI logic and user interactions
 - `fire_simulation_logic.py` – contains fire spread mechanics and grid updates
 
-▶️ **Run with**:
+**Run with**:
 
 ```bash
 python main.py
