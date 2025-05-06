@@ -1,0 +1,15 @@
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
+
+# Python virtual env
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
