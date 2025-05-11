@@ -262,3 +262,53 @@ This lab presents a fully interactive simulation of forest fire dynamics using c
 ```bash
 python main.py
 ```
+
+## `lab_06` – Lattice Gas Automaton: Gas Expansion Through a Hole
+
+This lab implements a 2D Lattice Gas Automaton (LGA) to simulate gas particles spreading through a hole in a wall that separates two compartments. The system evolves over time using discrete-time steps, with particle collisions and directional movement handled according to simple LGA rules.
+
+**Simulation scenario**:
+
+- A container is initially filled with gas on the left side of a vertical wall.
+- A hole in the wall allows the gas to flow into the right side.
+- Over time, particles spread and distribute evenly across the entire box.
+
+**Features**:
+
+- Fully visualized with Pygame
+- Interactive GUI with:
+
+    - Start / Stop / Reset buttons
+
+- LGA logic with:
+
+    - 4-directional streaming: up, down, left, right
+    - Elastic collisions (e.g., 2 particles opposite → redirect)
+
+- Red wall with a central hole that permits particle passage
+- Visualization of particle density per cell
+
+**Structure**:
+
+- `main.py` – runs the simulation loop and GUI
+- `lga_logic.py` – handles the LGA steps, wall and grid management
+- `cell.py` – contains the state and behavior of a single cell
+- `wall.py` – generates a wall with a configurable hole
+- `lga_visualization.py` – handles drawing the grid and UI elements
+- `constants.py` – stores all simulation parameters and color settings
+
+### Lab 06 – Output Preview
+
+![Forest Fire Simulation](assets/lab_06_demo.gif)
+
+**Run with**:
+
+```bash
+python main.py
+```
+
+**Cell state logic**:
+
+Each cell tracks particle directions as `[up, right, down, left]`.
+Particles are moved during the streaming phase and redirected during the collision phase if they meet head-on.
+
