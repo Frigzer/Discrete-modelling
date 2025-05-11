@@ -288,6 +288,18 @@ This lab implements a 2D Lattice Gas Automaton (LGA) to simulate gas particles s
 - Red wall with a central hole that permits particle passage
 - Visualization of particle density per cell
 
+### Lab 06 – Output Preview
+
+![Forest Fire Simulation](assets/lab_06_demo.gif)
+
+> A simple yet powerful demonstration of emergent behavior from local rules.\
+> The automaton conserves particles and models gas diffusion qualitatively.
+
+**Cell state logic**:
+
+Each cell tracks particle directions as `[up, right, down, left]`.
+Particles are moved during the streaming phase and redirected during the collision phase if they meet head-on.
+
 **Structure**:
 
 - `main.py` – runs the simulation loop and GUI
@@ -297,18 +309,8 @@ This lab implements a 2D Lattice Gas Automaton (LGA) to simulate gas particles s
 - `lga_visualization.py` – handles drawing the grid and UI elements
 - `constants.py` – stores all simulation parameters and color settings
 
-### Lab 06 – Output Preview
-
-![Forest Fire Simulation](assets/lab_06_demo.gif)
-
 **Run with**:
 
 ```bash
 python main.py
 ```
-
-**Cell state logic**:
-
-Each cell tracks particle directions as `[up, right, down, left]`.
-Particles are moved during the streaming phase and redirected during the collision phase if they meet head-on.
-
