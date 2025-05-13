@@ -416,3 +416,58 @@ This lab builds upon the previous LBM simulation and implements the **D2Q9 model
 
 > The fluid initially concentrated on the left side of the wall diffuses through the slit.\
 > Velocity vectors reveal the dynamics of flow symmetry, acceleration near the slit, and eventual equilibrium.
+
+## `lab_09` – Lattice Boltzmann Method: Boundary Conditions Comparison
+
+This lab extends the LBM fluid flow simulation with support for **multiple boundary conditions**, allowing comparison of their effects on velocity and density profiles in a flow channel.
+
+**Available Boundary Conditions**:
+
+- `"bounce-back"` – simulates solid wall reflection (no-slip)
+- `"constant"` – injects a **constant horizontal flow**
+- `"custom"` – mixed approach: linear velocity profile on the left, fixed density at the right
+
+Each boundary mode can be **switched at runtime** via GUI buttons.
+
+**Visualization**:
+
+Just like in lab 08, the screen is split into 3 side-by-side views showing:
+
+- Density field
+- X-component of velocity
+- Y-component of velocity
+
+Color encoding:
+
+- **Density**: white (high) to black (low)
+- **Ux**: red (positive) and blue (negative)
+- **Uy**: same principle (up/down flow)
+
+**Key Features**:
+
+- D2Q9 LBM implementation with BGK (single relaxation time)
+- Real-time **mass conservation check**
+- Velocity clamping to ensure stability
+- Full **Numba optimization** of compute-heavy steps
+- Custom equilibrium calculation and stream routines
+
+**Controls**:
+
+- Start / Stop
+- Switch boundary conditions: `"bounce-back"`, `"constant"`, `"custom"`
+- Adjust simulation speed with `+` and `–`
+- See current speed, iteration count, and boundary mode live on screen
+
+**Code Layout**:
+
+| File                   | Purpose                                                   |
+| ---------------------- | --------------------------------------------------------- |
+| `main.py`              | Main loop and GUI logic                                   |
+| `lbm_logic.py`         | Core LBM physics, including condition-dependent streaming |
+| `lbm_visualization.py` | GUI rendering for multiple modes                          |
+| `wall.py`              | Wall with central slit                                    |
+| `constants.py`         | All numerical and graphical configuration                 |
+
+### Lab 09 – Output Preview
+
+![TODO](assets/lab_09_demo.gif)
