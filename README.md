@@ -363,3 +363,56 @@ In this lab, the discrete Lattice Boltzmann Method (LBM) is implemented to simul
 ```bash
 python main.py
 ```
+
+## `lab_08` – Lattice Boltzmann Method: Fluid Flow and Velocity Fields
+
+This lab builds upon the previous LBM simulation and implements the **D2Q9 model** to simulate **fluid flow** through a narrow slit in a wall. It features real-time visualization of:
+
+- **Density**
+- **Horizontal velocity (Ux)**
+- **Vertical velocity (Uy)**
+
+**Model Summary**:
+
+- **LBM D2Q9** with 9 discrete velocity directions
+- **BGK collision model** (single relaxation time)
+- Wall with a configurable **central slit** (narrow opening)
+- Streaming and collision steps optimized with `numba`
+- Real-time calculation of:
+
+  - **Density field**
+  - **Velocity components** (Ux, Uy)
+
+**Visualization**:
+
+- Three-panel display using **Pygame**
+- Each panel shows:
+
+  - Left: density (white = high, black = low)
+  - Center: Ux (red = rightward, blue = leftward)
+  - Right: Uy (red = downward, blue = upward)
+
+- Velocity values are **clipped** and color-mapped to preserve interpretability
+
+**Controls**:
+
+- Buttons: Start / Stop / Reset / Speed Up / Slow Down
+- Speed and iteration counters
+- Debug prints for density and velocity values
+
+**Code Structure**:
+
+| File                   | Description                                                       |
+| ---------------------- | ----------------------------------------------------------------- |
+| `main.py`              | UI and simulation control                                         |
+| `lbm_logic.py`         | D2Q9 LBM implementation: collision, streaming, macroscopic fields |
+| `lbm_visualization.py` | Visualizes density, Ux, Uy with color mapping                     |
+| `wall.py`              | Generates vertical wall with configurable hole                    |
+| `constants.py`         | Configurable simulation parameters and color/velocity definitions |
+
+### Lab 08 – Output Preview
+
+![TODO](assets/lab_08_demo.gif)
+
+> The fluid initially concentrated on the left side of the wall diffuses through the slit.\
+> Velocity vectors reveal the dynamics of flow symmetry, acceleration near the slit, and eventual equilibrium.
