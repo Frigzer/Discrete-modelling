@@ -471,3 +471,71 @@ Color encoding:
 ### Lab 09 – Output Preview
 
 ![TODO](assets/lab_09_demo.gif)
+
+## `lab_10` – Final LBM Simulation with Particles, Streamlines and State Saving
+
+This is the most advanced version of the Lattice Boltzmann Method (LBM) simulation in your lab series. It combines fluid dynamics modeling with interactive visual tools and save/load functionality, making it a complete mini-simulation environment.
+
+### **Key Features Added in Lab 10:**
+
+**Tracer Particles**
+
+- Particles move according to the local velocity field.
+- Particle mass affects inertia (heavier = slower response).
+- Each particle leaves a visible **trajectory**.
+
+**Streamlines**
+
+- Visual representation of velocity direction (based on `ux` or `uy`).
+- Automatically scaled for the field magnitude.
+
+**State Saving and Loading (`.json`)**
+
+- Saves:
+
+  - Fields: `rho`, `ux`, `uy`, `f_in`, `f_out`
+  - Particles (position, mass, color, path)
+  - Wall structure
+  - Boundary condition and iteration count
+
+- Full simulation state can be restored anytime.
+
+**Export Visual Frames to BMP**
+
+- Each mode (`density`, `ux`, `uy`) can be saved as `.bmp` using PIL.
+- Includes streamlines and particles if visible.
+
+**Interactive Boundary Conditions**
+
+Switch between:
+
+- `"bounce-back"` — walls reflect the flow
+- `"constant"` — fixed velocities on boundaries
+- `"custom"` — mixed inflow/outflow with open boundaries
+
+**File Structure Overview**:
+
+| File                   | Description                                          |
+| ---------------------- | ---------------------------------------------------- |
+| `main.py`              | Main loop, GUI interactions, handles state changes   |
+| `lbm_logic.py`         | Physics engine (LBM), particle logic, save/load      |
+| `lbm_visualization.py` | Drawing logic: grid, buttons, streamlines, particles |
+| `wall.py`              | Generates wall with a central opening                |
+| `particle.py`          | Represents a colored particle with mass and history  |
+| `constants.py`         | Parameters (grid, colors, physical values)           |
+
+**Technical Highlights**:
+
+- **`Numba`** is used (`@njit`) to optimize collision, streaming and equilibrium functions.
+- Particles interact visually with the velocity field but do not alter it.
+- Supports multiple LBM boundary condition models — easy to compare physical behaviors.
+- The system can be paused, saved, and resumed without losing any state.
+
+### Lab 10 – Output Preview
+
+![TODO](assets/lab_10_demo.gif)
+
+> The simulation models 2D fluid flow through a chamber with an obstacle.\
+> Density, X-velocity, and Y-velocity fields are visualized in parallel views.\
+> Particles trace the flow paths, while streamlines indicate directional behavior.\
+> Users can save the simulation at any time, and reload it later for continued analysis.
