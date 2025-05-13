@@ -8,6 +8,19 @@ The course was divided into two main parts:
 - **Lab 01–Lab 05**: Focused on image processing using grayscale maps, including brightness manipulation and thresholding. These labs concluded with a forest fire simulation based on cellular automata.
 - **Lab 06–Lab 10**: Dedicated to simulations using the **Lattice Boltzmann Method (LBM)**, continuing with cellular automata as the core modeling technique.
 
+## Table of Contents
+
+- [Lab 01 – Image Processing](#lab_01--image-processing-brightness-adjustment-and-binarization)
+- [Lab 02 – Morphological Operations](#lab_02--morphological-operations-and-convolution-filtering)
+- [Lab 03 – 1D Cellular Automaton](#lab_03--1d-cellular-automaton-with-rule-based-evolution)
+- [Lab 04 – Conway's Game of Life](#lab_04--conways-game-of-life-with-interactive-gui)
+- [Lab 05 – Forest Fire Simulation](#lab_05--forest-fire-simulation-with-wind-humidity-and-gui-control)
+- [Lab 06 – Lattice Gas Automaton (LGA)](#lab_06--lattice-gas-automaton-gas-expansion-through-a-hole)
+- [Lab 07 – Lattice Boltzmann Method (LBM)](#lab_07--lattice-boltzmann-method-diffusion-through-a-hole)
+- [Lab 08 – LBM Fluid Flow](#lab_08--lattice-boltzmann-method-fluid-flow-and-velocity-fields)
+- [Lab 09 – LBM With Boundary Conditions](#lab_09--lattice-boltzmann-method-boundary-conditions-comparison)
+- [Lab 10 – Final LBM With Particle Tracking](#lab_10--final-lbm-simulation-with-particles-streamlines-and-state-saving)
+
 ## 📁 Repository Structure
 
 📦Discrete-modelling/  
