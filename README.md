@@ -290,7 +290,7 @@ This lab implements a 2D Lattice Gas Automaton (LGA) to simulate gas particles s
 
 ### Lab 06 – Output Preview
 
-![Forest Fire Simulation](assets/lab_06_demo.gif)
+![LGA Simulation](assets/lab_06_demo.gif)
 
 > A simple yet powerful demonstration of emergent behavior from local rules.\
 > The automaton conserves particles and models gas diffusion qualitatively.
@@ -308,6 +308,55 @@ Particles are moved during the streaming phase and redirected during the collisi
 - `wall.py` – generates a wall with a configurable hole
 - `lga_visualization.py` – handles drawing the grid and UI elements
 - `constants.py` – stores all simulation parameters and color settings
+
+**Run with**:
+
+```bash
+python main.py
+```
+
+## `lab_07` – Lattice Boltzmann Method: Diffusion Through a Hole
+
+In this lab, the discrete Lattice Boltzmann Method (LBM) is implemented to simulate gas diffusion in a 2D box. A vertical wall with a hole separates two regions: the left side is filled with gas, which gradually diffuses to the right.
+
+**Physical Model**:
+
+- **LBM (D2Q4)** – four velocity directions: up, right, down, left
+- Simulates mass distribution via local collisions and streaming
+- Simple **BGK (single-relaxation-time)** collision model
+- Tracks scalar field (concentration/density)
+
+**Features**:
+
+- Discrete streaming and collision steps with optimized NumPy + `@njit` (via `numba`)
+- Wall with a controllable hole in the middle
+- Mass conservation check at each step
+- Real-time density visualization using grayscale intensity
+- Adjustable animation speed
+
+**User interface**:
+
+- Built with Pygame
+- Buttons: Start / Stop / Reset / Speed Up / Slow Down
+- Display of current simulation speed
+- Wall shown in red; density shown from white (max) to black (min)
+
+**Code structure**:
+
+| File                   | Description                                            |
+| ---------------------- | ------------------------------------------------------ |
+| `main.py`              | Simulation loop and UI logic                           |
+| `lbm_logic.py`         | Core LBM engine (collision, streaming, density update) |
+| `lbm_visualization.py` | Renders current density state and handles buttons      |
+| `wall.py`              | Generates static wall with a hole                      |
+| `constants.py`         | Configuration: sizes, tau, colors, velocities          |
+
+### Lab 07 – Output Preview
+
+![TODO](assets/lab_07_demo.gif)
+
+> Gas particles slowly flow from the left region into the right through a narrow hole, until equilibrium is reached.\
+> Real-time tracking of left/right mass balance is included for validation.
 
 **Run with**:
 
